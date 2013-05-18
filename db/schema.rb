@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130518180554) do
+ActiveRecord::Schema.define(:version => 20130518211024) do
 
   create_table "artists", :force => true do |t|
     t.integer  "rf_id"
@@ -24,11 +24,12 @@ ActiveRecord::Schema.define(:version => 20130518180554) do
     t.text     "short_description"
     t.string   "timestamp"
     t.string   "musicbrainz_id"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
-    t.integer  "musicbrainz_confidence", :default => 0
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.text     "last_fm_response"
     t.string   "last_fm_name"
+    t.text     "last_fm_images"
+    t.text     "last_fm_tags"
   end
 
   create_table "similar_artists", :force => true do |t|

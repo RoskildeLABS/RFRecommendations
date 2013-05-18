@@ -21,4 +21,5 @@ end
 
 gem 'sass-rails'
 gem 'zurb-foundation'
-
+gem 'will_paginate'
+gem 'rdiscount'

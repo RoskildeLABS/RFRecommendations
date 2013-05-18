@@ -1,12 +1,30 @@
 <p><%= link_to "&larr; Back".html_safe, artists_path %></p>
 
-<h1><%= link_to resource.name, resource %></h1>
-<h2 class='subheader'><%= link_to(resource.last_fm_name, resource.last_fm_url) if resource.last_fm_name %></h2>
-<div class='description'><%= resource.description.html_safe %></div>
-<h3>Similar artists</h3>
-<ul>
-  <% resource.similar_artists_association.each do |similar_association| %>
-    <% similar = similar_association.similar_artist %>
-    <li><%= link_to similar.name, similar %> (<%= similar_association.score %>)</li>
-  <% end %>
-</ul>
+<div class='row'>
+  <div class='artist large-8 columns'>
+    <h1 class="flat"><%= link_to resource.name, resource %></h1>
+    <h5 class='subheader'>Last.fm match: <%= link_to(resource.last_fm_name, resource.last_fm_url) if resource.last_fm_name %></h5>
+    <br />
+    <br />
+    <div class='description'>
+      <p>From <%= link_to "roskilde-festival.dk", resource.link %>:</p>
+      <p>
+        <strong><%= resource.short_description %></strong>
+      </p>
+      <%= raw Markdown.new(resource.description).to_html %>
+    </div>
+    <p><%= image_tag resource.last_fm_response['image'].last["#text"] %></p>
+  </div>
+  <div class='large-4 columns'>
+    <p><%= image_tag resource.medium_image_url %></p>
+    <h3><%= link_to "Similar artists", similar_artist_path(resource) %></h3>
+    <ul>
+      <% resource.similar_artists_association.each do |similar_association| %>
+        <% similar = similar_association.similar_artist %>
+        <li><%= link_to similar.name, similar %> (<%= similar_association.score %>)</li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<%= render 'common/format_links' %>

@@ -95,6 +95,7 @@ GEM
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
     rake (10.0.4)
+    rdiscount (2.0.7.2)
     rdoc (3.12.2)
       json (~> 1.4)
     responders (0.9.3)
@@ -127,6 +128,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.37)
+    will_paginate (3.0.4)
     zurb-foundation (4.1.5)
       sass (>= 3.2.0)
 
@@ -141,7 +143,9 @@ DEPENDENCIES
   jquery-rails
   nokogiri
   rails (= 3.2.13)
+  rdiscount
   rspec-rails
   sass-rails
   sqlite3
+  will_paginate
   zurb-foundation

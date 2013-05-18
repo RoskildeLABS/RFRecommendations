@@ -19,8 +19,8 @@ namespace :data do
       a.description = ActionView::Base.full_sanitizer.sanitize(artist.search("description").text)
       a.short_description = artist.search("text").text
       a.image_url = artist.search("imageUrl").text
-      a.medium_image_url = artist.search("mediumimageUrl").text
-      a.link = "http://roskilde-festival.dk/" + artist.search("link").text
+      a.medium_image_url = rf_url + artist.search("mediumimageUrl").text
+      a.link = rf_url + artist.search("link").text
       a.rf_id = artist.search("id").text.to_i
       print a.name + ", "
       a.save && a
@@ -36,14 +36,33 @@ namespace :data do
       url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=#{escape artist.name}&api_key=cc2f6ef14dfc15aa8b5be688eb33a704&format=json"
       json = JSON.parse(open(url).read)
       lastfm = json['artist']
-      if !lastfm
+
+      if !lastfm || lastfm['error']
         print "Nothing found ...\n"
         next
       end
 
-      artist.update_attribute :musicbrainz_id, lastfm['mbid'].presence
-      artist.update_attribute :last_fm_name, lastfm['name'].presence
-      artist.update_attribute :last_fm_response, lastfm
+      images = lastfm['image'] && lastfm['image'].inject({}) do |hash, image|
+        hash.merge image['size'].to_sym => image["#text"]
+      end
+
+      if lastfm['tags'].is_a?(Hash)
+        tags = lastfm['tags']['tag']
+        tags = [tags] unless tags.is_a?(Array)
+        tags = tags.inject([]) do |array, tag|
+          array << tag['name']
+        end.join(", ")
+      else
+        tags = nil
+      end
+
+      artist.update_attributes(
+        :musicbrainz_id => lastfm['mbid'].presence,
+        :last_fm_name => lastfm['name'].presence,
+        :last_fm_response => lastfm,
+        :last_fm_images => images,
+        :last_fm_tags => tags
+      )
 
       print "#{lastfm['name']} (#{lastfm['mbid']})\n"
     end
@@ -83,4 +102,8 @@ end
 
 def escape(str)
   CGI.escape(str)
+end
+
+def rf_url
+  "http://roskilde-festival.dk/"
 end
