@@ -30,10 +30,6 @@ class Artist < ActiveRecord::Base
   scope :with_musicbrainz_id,
     where("musicbrainz_id IS NOT NULL")
 
-  def last_fm_name
-    @last_fm_name ||= self.last_fm_response.try(:fetch, 'name')
-  end
-
   def last_fm_url
     @last_fm_url ||= self.last_fm_response.try(:fetch, 'url')
   end

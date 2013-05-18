@@ -42,17 +42,18 @@ namespace :data do
       end
 
       artist.update_attribute :musicbrainz_id, lastfm['mbid'].presence
+      artist.update_attribute :last_fm_name, lastfm['name'].presence
       artist.update_attribute :last_fm_response, lastfm
 
       print "#{lastfm['name']} (#{lastfm['mbid']})\n"
     end
   end
-  
+
   namespace :last_fm do
     desc "Similar"
     task :similar => [:environment] do
       Artist.all.each do |artist|
-        puts artist.name + (artist.musicbrainz_id ? "(By id)" : "(By name)")
+        puts artist.name
         SimilarArtist.delete_all(["artist_id = ?", artist.id])
         json = JSON.parse(open(last_fm_similar_url_for_artist(artist)).read)
         lastfm = json['similarartists'].try(:fetch, 'artist')
@@ -76,11 +77,7 @@ end
 
 def last_fm_similar_url_for_artist(artist)
   url = "http://ws.audioscrobbler.com/2.0/?method=artist.getsimilar"
-  if artist.musicbrainz_id
-    url << "&mbid=#{escape(artist.musicbrainz_id)}"
-  else
-    url << "&artist=#{artist.last_fm_name || artist.name}"
-  end
+  url << "&artist=#{escape (artist.last_fm_name || artist.name)}"
   url + "&api_key=cc2f6ef14dfc15aa8b5be688eb33a704&format=json"
 end
 

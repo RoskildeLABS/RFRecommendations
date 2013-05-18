@@ -19,3 +19,12 @@ table {
     &.last_fm_name { width: 25%; }
   }
 }
+
+h1, h2, h3, h4, h5, h6 {
+  &.flat {
+    margin-bottom: 0;
+  }
+}
+h1 + h4.subheader {
+  margin-top: 0;
+}
