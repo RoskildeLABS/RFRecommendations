@@ -16,13 +16,13 @@ class ArtistsController < ApplicationController
   private
 
   def resource
-    @artist ||= end_of_association_chain.includes(:similar_artists).find(params[:id])
+    @artist ||= end_of_association_chain.includes(:similar_artists_association => :similar_artist).find(params[:id])
   end
 
   def collection
     return @artists if @artists
 
-    arel = end_of_association_chain.includes(:similar_artists)
+    arel = end_of_association_chain.includes(:similar_artists_association)
     if params[:q]
       arel = search(arel, params[:q])
     elsif params[:ids]

@@ -37,16 +37,22 @@ class Artist < ActiveRecord::Base
     @last_fm_url ||= self.last_fm_response.try(:fetch, 'url')
   end
 
+  def similar_artists_with_scores
+    self.similar_artists_association.map do |assoc|
+      { id: assoc.similar_artist.id, name: assoc.similar_artist.name, score: assoc.score }
+    end
+  end
+
   def as_json(opts = {})
     opts.merge! except: [:created_at, :updated_at, :last_fm_response]
-    opts.merge! methods: [:similar_artist_ids]
+    opts.merge! methods: [:similar_artists_with_scores]
 
     super opts
   end
 
   def to_xml(opts = {})
     opts.merge! except: [:created_at, :updated_at, :last_fm_response]
-    opts.merge! methods: [:similar_artists_ids]
+    opts.merge! methods: [:similar_artists_with_scores]
 
     super opts
   end
