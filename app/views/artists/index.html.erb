@@ -1,0 +1,22 @@
+<table cellspacing='0'>
+  <thead>
+    <tr>
+      <th>Name in official schedule</th>
+      <th>Last.fm match</th>
+      <th>Similar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% collection.each do |artist| %>
+      <tr>
+        <td><%= link_to artist.name, artist %></td>
+        <td>
+          <% if l = artist.last_fm_response %>
+            <%= link_to l['name'], l['url'] %>
+          <% end %>
+        </td>
+        <td><%= raw artist.similar_artists.map { |a| link_to a.name, a }.join(", ") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

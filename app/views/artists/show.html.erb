@@ -1,0 +1,11 @@
+<p><%= link_to "&larr; Back".html_safe, artists_path %></p>
+
+<h1><%= link_to resource.name, resource %></h1>
+<h2 class='subheader'><%= link_to(resource.last_fm_name, resource.last_fm_url) if resource.last_fm_name %></h2>
+<div class='description'><%= resource.description %></div>
+<h3>Similar artists</h3>
+<ul>
+  <% resource.similar_artists.each do |similar| %>
+    <li><%= link_to similar.name, similar %></li>
+  <% end %>
+</ul>
