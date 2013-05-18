@@ -2,10 +2,11 @@
 
 <h1><%= link_to resource.name, resource %></h1>
 <h2 class='subheader'><%= link_to(resource.last_fm_name, resource.last_fm_url) if resource.last_fm_name %></h2>
-<div class='description'><%= resource.description %></div>
+<div class='description'><%= resource.description.html_safe %></div>
 <h3>Similar artists</h3>
 <ul>
-  <% resource.similar_artists.each do |similar| %>
-    <li><%= link_to similar.name, similar %></li>
+  <% resource.similar_artists_association.each do |similar_association| %>
+    <% similar = similar_association.similar_artist %>
+    <li><%= link_to similar.name, similar %> (<%= similar_association.score %>)</li>
   <% end %>
 </ul>

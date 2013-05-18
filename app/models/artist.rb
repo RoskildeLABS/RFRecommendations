@@ -39,8 +39,15 @@ class Artist < ActiveRecord::Base
   end
 
   def as_json(opts = {})
-    opts.merge! except: [:created_at, :updated_at]
+    opts.merge! except: [:created_at, :updated_at, :last_fm_response]
+    opts.merge! methods: [:similar_artists_as_json] unless opts[:skip_similar]
 
     super opts
+  end
+
+  def similar_artists_as_json
+    self.similar_artists_association.map(&:similar_artist_id).map do |id|
+      Artist.find(id).as_json(skip_similar: true)
+    end
   end
 end

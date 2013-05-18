@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'open-uri'
 
 namespace :data do
@@ -28,44 +29,11 @@ namespace :data do
     puts "Done (#{artists.count})"
   end
 
-  desc "MusicBrainz"
-  task :musicbrainz => [:environment] do
-    puts ""
-    Artist.where("musicbrainz_id IS NULL").all.in_groups_of(15).each do |group|
-      group.each do |artist|
-        begin
-          print artist.name + " => "
-          url = "http://www.musicbrainz.org/ws/2/artist/?limit=1&query=artist:#{URI.encode artist.name.gsub("/"," ").gsub("&", "and")}"
-          brainz = Nokogiri::XML(open(url, {'User-Agent' => 'RoskildeLabs/1.0 (roskildelabs@gmail.com)'}))
-          b = brainz.search("artist").first
-          mb_name = b.search("name").first.text
-          artist.update_attribute :musicbrainz_id, b.attr("id").presence
-
-          confidence = 0
-          if artist.name.downcase == mb_name.downcase
-            confidence = 10
-          elsif artist.name.match /#{mb_name}/i
-            confidence = 5
-          end
-
-          artist.update_attribute(:musicbrainz_confidence, confidence)
-
-          print mb_name + " (#{b.attr("id")}) Confidence:#{confidence}\n"
-        rescue Exception => e
-          print "No artist found for -- #{e.inspect}'\n"
-        end
-      end
-      puts "Sleeping"
-      sleep 10
-    end
-    puts ""
-  end
-
   task :last_fm => [:environment] do
     puts "Fetching similar artists from last.fm"
     Artist.all.each do |artist|
       print artist.name + " => "
-      url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=#{CGI.escape artist.name}&autocorrect=1&api_key=cc2f6ef14dfc15aa8b5be688eb33a704&format=json"
+      url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=#{escape artist.name}&api_key=cc2f6ef14dfc15aa8b5be688eb33a704&format=json"
       json = JSON.parse(open(url).read)
       lastfm = json['artist']
       if !lastfm
@@ -83,29 +51,39 @@ namespace :data do
   namespace :last_fm do
     desc "Similar"
     task :similar => [:environment] do
-      Artist.with_musicbrainz_id.each do |artist|
+      Artist.all.each do |artist|
+        puts artist.name + (artist.musicbrainz_id ? "(By id)" : "(By name)")
         SimilarArtist.delete_all(["artist_id = ?", artist.id])
-        url = "http://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&mbid=#{CGI.escape artist.musicbrainz_id}&autocorrect=1&api_key=cc2f6ef14dfc15aa8b5be688eb33a704&format=json"
-        json = JSON.parse(open(url).read)
-        lastfm = json['similarartists']['artist']
+        json = JSON.parse(open(last_fm_similar_url_for_artist(artist)).read)
+        lastfm = json['similarartists'].try(:fetch, 'artist')
 
-        puts artist.name
-        begin
-          lastfm.each do |similar|
-            if record = Artist.find_by_musicbrainz_id(similar['mbid'])
-              s = SimilarArtist.create artist_id: artist.id, similar_artist_id: record.id, score: similar['match']
-              puts "- #{s.similar_artist.name}: #{s.score}"
-            end
+        if !lastfm.is_a?(Array)
+          next
+        end
+
+        lastfm.each do |similar|
+          if record = Artist.find_by_musicbrainz_id(similar['mbid'])
+            s = SimilarArtist.create artist_id: artist.id, similar_artist_id: record.id, score: similar['match']
+            puts "- #{s.similar_artist.name}: #{s.score}"
           end
-        rescue Exception => e
-          puts e.inspect
         end
       end
     end
   end
 
-  task :all => [:artists, :last_fm, :musicbrainz, 'last_fm:similar']
+  task :all => [:artists, :last_fm, 'last_fm:similar']
 end
 
-def mb_search_url(artist_name)
+def last_fm_similar_url_for_artist(artist)
+  url = "http://ws.audioscrobbler.com/2.0/?method=artist.getsimilar"
+  if artist.musicbrainz_id
+    url << "&mbid=#{escape(artist.musicbrainz_id)}"
+  else
+    url << "&artist=#{artist.last_fm_name || artist.name}"
+  end
+  url + "&api_key=cc2f6ef14dfc15aa8b5be688eb33a704&format=json"
+end
+
+def escape(str)
+  CGI.escape(str)
 end

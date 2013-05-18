@@ -1,21 +1,21 @@
 <table cellspacing='0'>
   <thead>
     <tr>
-      <th>Name in official schedule</th>
-      <th>Last.fm match</th>
-      <th>Similar</th>
+      <th class="name">Name in official schedule</th>
+      <th class="last_fm_name">Last.fm match</th>
+      <th class="similar">Similar</th>
     </tr>
   </thead>
   <tbody>
     <% collection.each do |artist| %>
       <tr>
-        <td><%= link_to artist.name, artist %></td>
-        <td>
+        <td class="name"><strong><%= link_to artist.name, artist %></strong></td>
+        <td class="last_fm_name">
           <% if l = artist.last_fm_response %>
             <%= link_to l['name'], l['url'] %>
           <% end %>
         </td>
-        <td><%= raw artist.similar_artists.map { |a| link_to a.name, a }.join(", ") %></td>
+        <td class="similar"><%= raw artist.similar_artists.map { |a| link_to a.name, a }.join(", ") %></td>
       </tr>
     <% end %>
   </tbody>

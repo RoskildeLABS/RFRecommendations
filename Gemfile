@@ -19,3 +19,6 @@ group :development, :test do
   gem "factory_girl_rails"
 end
 
+gem 'sass-rails'
+gem 'zurb-foundation'
+
