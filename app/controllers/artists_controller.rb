@@ -10,7 +10,11 @@ class ArtistsController < ApplicationController
     if params[:q]
       @artists = search(@artists, params[:q])
     end
-    render :index
+    respond_to do |format|
+      format.html { render :index }
+      format.json { respond_with @artists.map(&:similar_artists_with_scores) }
+      format.xml { respond_with @artists }
+    end
   end
 
   private
@@ -22,7 +26,7 @@ class ArtistsController < ApplicationController
   def collection
     return @artists if @artists
 
-    arel = end_of_association_chain.includes(:similar_artists_association)
+    arel = end_of_association_chain.includes(:similar_artists_association => :similar_artist)
     if params[:q]
       arel = search(arel, params[:q])
     elsif params[:ids]
