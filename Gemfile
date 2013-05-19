@@ -19,9 +19,12 @@ group :development, :test do
   gem "factory_girl_rails"
 end
 
-gem 'uglifier'
-gem 'sass-rails'
-gem 'zurb-foundation'
+group :assets do
+  gem 'uglifier'
+  gem 'sass-rails'
+  gem 'zurb-foundation'
+end
+
 gem 'will_paginate'
 gem 'rdiscount'
 gem 'capistrano'
