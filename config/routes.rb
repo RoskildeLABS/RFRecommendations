@@ -6,6 +6,8 @@ Similar::Application.routes.draw do
     end
   end
 
+  match "users/:username", to: "users#show"
+
   root to: "artists#index"
 
 end
