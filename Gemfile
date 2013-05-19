@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'
-gem 'sqlite3'
+gem 'mysql2'
 gem 'jquery-rails'
 gem "inherited_resources"
 gem 'nokogiri'
@@ -23,3 +23,5 @@ gem 'sass-rails'
 gem 'zurb-foundation'
 gem 'will_paginate'
 gem 'rdiscount'
+gem 'capistrano'
+
