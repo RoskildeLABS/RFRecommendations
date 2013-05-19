@@ -19,6 +19,7 @@ group :development, :test do
   gem "factory_girl_rails"
 end
 
+gem 'uglifier'
 gem 'sass-rails'
 gem 'zurb-foundation'
 gem 'will_paginate'
