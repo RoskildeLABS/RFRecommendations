@@ -31,7 +31,7 @@
           <% end %>
         </td>
         <td class="similar">
-          <%= raw artist.similar_artists_association.map { |a| link_to(a.similar_artist.name, a) + " (#{a.score.round(2)})" }.join(", ") %>
+          <%= raw artist.similar_artists_association.map { |a| link_to(a.similar_artist.name, a.similar_artist) + " (#{a.score.round(2)})" }.join(", ") %>
         </td>
       </tr>
     <% end %>
