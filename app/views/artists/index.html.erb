@@ -5,6 +5,12 @@
   </div>
 <% end %>
 
+<% if @username %>
+  <div class='text-center'>
+    <h5 class='flat'>Matches for user <%= link_to @username, "http://last.fm/#{@username}" %></h5>
+  </div>
+<% end %>
+
 <div class='row'>
   <div class='large-8 columns large-centered'>
     <%= form_tag '', method: 'GET' do %>

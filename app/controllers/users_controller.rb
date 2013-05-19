@@ -1,12 +1,11 @@
 class UsersController < ApplicationController
-  respond_to :html
-  respond_to :json
-  respond_to :xml
+  respond_to :html, :json, :xml
 
   helper_method :collection
 
   def show
-    @artists = last_fm_artists_for_user(params[:username]).page(params[:page])
+    @username = params[:username]
+    @artists = last_fm_artists_for_user(@username).page(params[:page])
     respond_to do |format|
       format.html { render 'artists/index' }
       format.json { respond_with @artists }

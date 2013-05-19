@@ -1,9 +1,22 @@
 class ArtistsController < ApplicationController
-  inherit_resources
-  actions :index, :show
-  respond_to :json
-  respond_to :html
-  respond_to :xml
+  respond_to :json, :html, :xml
+  helper_method :collection, :resource
+
+  def index
+    respond_to do |format|
+      format.html
+      format.json { render json: {artists: collection} }
+      format.xml { render xml: collection }
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.html
+      format.json { render json: {artist: resource} }
+      format.xml { render xml: resource }
+    end
+  end
 
   def similar
     @artists = resource.similar_artists.page(params[:page])
@@ -12,21 +25,21 @@ class ArtistsController < ApplicationController
     end
     respond_to do |format|
       format.html { render :index }
-      format.json { respond_with @artists }
-      format.xml { respond_with @artists }
+      format.json { render json: {artists: collection} }
+      format.xml { render xml: collection }
     end
   end
 
   private
 
   def resource
-    @artist ||= end_of_association_chain.includes(:similar_artists_association => :similar_artist).find(params[:id])
+    @artist ||= Artist.includes(:similar_artists_association => :similar_artist).find(params[:id])
   end
 
   def collection
     return @artists if @artists
 
-    arel = end_of_association_chain.includes(:similar_artists_association => :similar_artist)
+    arel = Artist.includes(:similar_artists_association => :similar_artist)
     if params[:q]
       arel = search(arel, params[:q])
     elsif params[:ids]
