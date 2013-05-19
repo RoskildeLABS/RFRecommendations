@@ -12,7 +12,7 @@ class ArtistsController < ApplicationController
     end
     respond_to do |format|
       format.html { render :index }
-      format.json { respond_with @artists.map(&:similar_artists_with_scores) }
+      format.json { respond_with @artists }
       format.xml { respond_with @artists }
     end
   end
