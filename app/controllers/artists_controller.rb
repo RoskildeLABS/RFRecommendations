@@ -4,7 +4,9 @@ class ArtistsController < ApplicationController
 
   def index
     respond_to do |format|
-      format.html
+      format.html do
+        @artists = collection.by_name.paginate(per_page: 20, page: params[:page])
+      end
       format.json { render json: {artists: collection} }
       format.xml { render xml: collection }
     end
@@ -45,7 +47,7 @@ class ArtistsController < ApplicationController
     elsif params[:ids]
       arel = arel.where("id IN (?)", params[:ids].split(","))
     end
-    @artists = arel.paginate(per_page: 20, page: params[:page])
+    @artists = arel
   end
 
   def search(arel, q)
