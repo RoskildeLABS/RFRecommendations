@@ -22,7 +22,7 @@ namespace :data do
       a.image_url = artist.search("imageUrl").text
       a.medium_image_url = rf_url + artist.search("mediumimageUrl").text
       a.link = rf_url + artist.search("link").text
-      a.rf_id = artist.search("id").text.to_i
+      a.rf_id = artist.attribute("id").value.to_i
       print a.name + ", "
       a.save && a
     end
