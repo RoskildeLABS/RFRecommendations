@@ -2,6 +2,7 @@
   <div class='artist large-8 small-11 small-centered columns'>
     <h1 class="flat"><%= link_to resource.name, resource %></h1>
     <h5 class='subheader'>Last.fm match: <%= link_to(resource.last_fm_name, resource.last_fm_url) if resource.last_fm_name %></h5>
+    <h5 class='subheader'>Plays: <code><%= Time.strptime(resource.timestamp, '%s').strftime("%A, %-d %B %Y") %></code> at <code><%= resource.stage %></code></h5>
     <br />
     <br />
     <div class='description'>
