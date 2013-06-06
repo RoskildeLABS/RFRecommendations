@@ -8,8 +8,8 @@ namespace :data do
     Artist.delete_all
 
     puts "Fetching feed"
-    feedURL = 'http://labs.roskilde-festival.dk/resources/legacy_bandobjects_251_uk.xml'
-    # feedURL = 'http://roskilde-festival.dk/typo3conf/ext/tcpageheaderobjects/xml/bandobjects_251_uk.xml'
+    # feedURL = 'http://labs.roskilde-festival.dk/resources/legacy_bandobjects_251_uk.xml'
+    feedURL = 'http://roskilde-festival.dk/typo3conf/ext/tcpageheaderobjects/xml/bandobjects_251_uk.xml'
     feed = Nokogiri::XML(open(feedURL))
     puts "Generating artists: "
     artists = feed.search("item").collect do |artist|
