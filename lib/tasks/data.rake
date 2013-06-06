@@ -3,9 +3,11 @@ require 'open-uri'
 
 namespace :data do
   desc "Generate artist data from feed"
-  task :artists => [:environment] do
-    puts "Removing old artists"
-    Artist.delete_all
+  task :artists => [:environment] do |task, args|
+    if ['1', 'true'].include?(ENV['clean'])
+      puts "Removing old artists"
+      Artist.delete_all
+    end
 
     puts "Fetching feed"
     # feedURL = 'http://labs.roskilde-festival.dk/resources/legacy_bandobjects_251_uk.xml'
@@ -13,8 +15,8 @@ namespace :data do
     feed = Nokogiri::XML(open(feedURL))
     puts "Generating artists: "
     artists = feed.search("item").collect do |artist|
-      a = Artist.new
-      a.name = artist.search("artistName").text
+      name = artist.search("artistName").text
+      a = Artist.find_or_create_by_name(name)
       a.stage = artist.search("scene").text
       a.timestamp = artist.search("original_timestamp").text
       a.description = ActionView::Base.full_sanitizer.sanitize(artist.search("description").text)
