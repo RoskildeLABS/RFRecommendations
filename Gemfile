@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '~> 3.2.13'
 gem 'mysql2'
 gem 'jquery-rails'
 gem 'nokogiri'
@@ -26,5 +26,4 @@ end
 
 gem 'will_paginate'
 gem 'rdiscount'
-gem 'capistrano'
 

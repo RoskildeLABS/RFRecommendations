@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130518211024) do
+ActiveRecord::Schema.define(:version => 20140221092030) do
 
   create_table "artists", :force => true do |t|
     t.integer  "rf_id"
@@ -35,9 +35,9 @@ ActiveRecord::Schema.define(:version => 20130518211024) do
   create_table "similar_artists", :force => true do |t|
     t.integer  "artist_id"
     t.integer  "similar_artist_id"
-    t.float    "score"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
+    t.float    "score"
   end
 
 end

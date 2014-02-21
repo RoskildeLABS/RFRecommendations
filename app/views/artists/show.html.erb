@@ -2,7 +2,7 @@
   <div class='artist large-8 small-11 small-centered columns'>
     <h1 class="flat"><%= link_to resource.name, resource %></h1>
     <h5 class='subheader'>Last.fm match: <%= link_to(resource.last_fm_name, resource.last_fm_url) if resource.last_fm_name %></h5>
-    <h5 class='subheader'>Plays: <code><%= Time.strptime(resource.timestamp, '%s').strftime("%A, %-d %B %Y") %></code> at <code><%= resource.stage %></code></h5>
+    <h5 class='subheader'>Plays: <code><%= Time.at(resource.timestamp.to_i).strftime("%A, %-d %B %Y") %></code> at <code><%= resource.stage %></code></h5>
     <br />
     <br />
     <div class='description'>
@@ -12,7 +12,7 @@
       </p>
       <%= raw Markdown.new(resource.description).to_html %>
     </div>
-    <p><%= image_tag resource.last_fm_response['image'].last["#text"] %></p>
+    <p><%= image_tag resource.last_fm_response.try( :fetch, 'image').try(:last).try(:fetch, "#text") %></p>
   </div>
   <div class='large-4 small-11 small-centered columns'>
     <p><%= image_tag resource.medium_image_url %></p>
