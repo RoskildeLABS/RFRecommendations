@@ -2,7 +2,7 @@ require "bundler/capistrano"
 load 'deploy/assets'
 
 # SERVER
-set :application, "rf-recommendations.brnbw.com"
+set :application, "similar.roskildelabs.com"
 set :domain,      "#{application}"
 set :user,        "mikker"
 set :use_sudo,    false

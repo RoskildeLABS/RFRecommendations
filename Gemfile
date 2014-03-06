@@ -11,7 +11,7 @@ end
 
 group :development do
   gem "annotate", ">=2.5.0"
-  gem "capistrano"
+  gem "capistrano", '~> 2.15.5'
 end
 
 group :development, :test do

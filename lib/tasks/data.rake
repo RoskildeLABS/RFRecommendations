@@ -32,6 +32,7 @@ namespace :data do
     puts "Done (#{artists.count})"
   end
 
+  desc "Match to last.fm artists"
   task :last_fm => [:environment] do
     puts "Fetching similar artists from last.fm"
     Artist.all.each do |artist|
@@ -94,6 +95,7 @@ namespace :data do
     end
   end
 
+  desc "Generate all data"
   task :all => [:artists, :last_fm, 'last_fm:similar']
 end
 
