@@ -38,6 +38,10 @@ class Artist < ActiveRecord::Base
     @last_fm_url ||= self.last_fm_response.try(:fetch, 'url')
   end
 
+  def last_fm_image
+    @last_fm_image ||= self.last_fm_response && self.last_fm_response['image'].last["#text"].presence
+  end
+
   def similar_artists_with_scores
     self.similar_artists_association.map do |assoc|
       { id: assoc.similar_artist.id, name: assoc.similar_artist.name, score: assoc.score }

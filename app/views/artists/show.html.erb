@@ -12,7 +12,7 @@
       </p>
       <%= raw Markdown.new(resource.description).to_html %>
     </div>
-    <p><%= image_tag resource.last_fm_response.try( :fetch, 'image').try(:last).try(:fetch, "#text") %></p>
+    <p><%= image_tag resource.last_fm_image if resource.last_fm_image %></p>
   </div>
   <div class='large-4 small-11 small-centered columns'>
     <p><%= image_tag resource.medium_image_url %></p>
